@@ -1,0 +1,45 @@
+-- Found Git: C:/esp_v5/tools/Espressif/tools/idf-git/2.30.1/cmd/git.exe (found version "2.30.1.windows.1") 
+-- ccache will be used for faster recompilation
+-- The C compiler identification is GNU 12.2.0
+-- The CXX compiler identification is GNU 12.2.0
+-- The ASM compiler identification is GNU
+-- Found assembler: C:/esp_v5/tools/Espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc.exe
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/esp_v5/tools/Espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/esp_v5/tools/Espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-g++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Project is not inside a git repository, or git repository has no commits; will not use 'git describe' to determine PROJECT_VER.
+-- Building ESP-IDF components for target esp32
+-- Project sdkconfig file D:/project/ESP32/WIFI_config/sdkconfig
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of time_t
+-- Check size of time_t - done
+-- Found Python3: c:/esp_v5/tools/Espressif/python_env/idf5.1_py3.8_env/Scripts/python.exe (found version "3.8.7") found components: Interpreter 
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS - Success
+-- App "WIFI_config" version: 1
+-- Adding linker script D:/project/ESP32/WIFI_config/build/esp-idf/esp_system/ld/memory.ld
+-- Adding linker script C:/esp_v5/idf/components/esp_system/ld/esp32/sections.ld.in
+-- Adding linker script C:/esp_v5/idf/components/esp_rom/esp32/ld/esp32.rom.ld
+-- Adding linker script C:/esp_v5/idf/components/esp_rom/esp32/ld/esp32.rom.api.ld
+-- Adding linker script C:/esp_v5/idf/components/esp_rom/esp32/ld/esp32.rom.libgcc.ld
+-- Adding linker script C:/esp_v5/idf/components/esp_rom/esp32/ld/esp32.rom.newlib-data.ld
+-- Adding linker script C:/esp_v5/idf/components/esp_rom/esp32/ld/esp32.rom.syscalls.ld
+-- Adding linker script C:/esp_v5/idf/components/esp_rom/esp32/ld/esp32.rom.newlib-funcs.ld
+-- Adding linker script C:/esp_v5/idf/components/soc/esp32/ld/esp32.peripherals.ld
+-- Components: app_trace app_update bootloader bootloader_support bt cmock console cxx driver efuse esp-tls esp_adc esp_app_format esp_coex esp_common esp_eth esp_event esp_gdbstub esp_hid esp_http_client esp_http_server esp_https_ota esp_https_server esp_hw_support esp_lcd esp_local_ctrl esp_mm esp_netif esp_netif_stack esp_partition esp_phy esp_pm esp_psram esp_ringbuf esp_rom esp_system esp_timer esp_wifi espcoredump esptool_py fatfs freertos hal heap http_parser idf_test ieee802154 json log lwip main mbedtls mqtt newlib nvs_flash openthread partition_table perfmon protobuf-c protocomm pthread sdmmc soc spi_flash spiffs tcp_transport ulp unity usb vfs wear_levelling wifi_provisioning wpa_supplicant xtensa
+-- Component paths: C:/esp_v5/idf/components/app_trace C:/esp_v5/idf/components/app_update C:/esp_v5/idf/components/bootloader C:/esp_v5/idf/components/bootloader_support C:/esp_v5/idf/components/bt C:/esp_v5/idf/components/cmock C:/esp_v5/idf/components/console C:/esp_v5/idf/components/cxx C:/esp_v5/idf/components/driver C:/esp_v5/idf/components/efuse C:/esp_v5/idf/components/esp-tls C:/esp_v5/idf/components/esp_adc C:/esp_v5/idf/components/esp_app_format C:/esp_v5/idf/components/esp_coex C:/esp_v5/idf/components/esp_common C:/esp_v5/idf/components/esp_eth C:/esp_v5/idf/components/esp_event C:/esp_v5/idf/components/esp_gdbstub C:/esp_v5/idf/components/esp_hid C:/esp_v5/idf/components/esp_http_client C:/esp_v5/idf/components/esp_http_server C:/esp_v5/idf/components/esp_https_ota C:/esp_v5/idf/components/esp_https_server C:/esp_v5/idf/components/esp_hw_support C:/esp_v5/idf/components/esp_lcd C:/esp_v5/idf/components/esp_local_ctrl C:/esp_v5/idf/components/esp_mm C:/esp_v5/idf/components/esp_netif C:/esp_v5/idf/components/esp_netif_stack C:/esp_v5/idf/components/esp_partition C:/esp_v5/idf/components/esp_phy C:/esp_v5/idf/components/esp_pm C:/esp_v5/idf/components/esp_psram C:/esp_v5/idf/components/esp_ringbuf C:/esp_v5/idf/components/esp_rom C:/esp_v5/idf/components/esp_system C:/esp_v5/idf/components/esp_timer C:/esp_v5/idf/components/esp_wifi C:/esp_v5/idf/components/espcoredump C:/esp_v5/idf/components/esptool_py C:/esp_v5/idf/components/fatfs C:/esp_v5/idf/components/freertos C:/esp_v5/idf/components/hal C:/esp_v5/idf/components/heap C:/esp_v5/idf/components/http_parser C:/esp_v5/idf/components/idf_test C:/esp_v5/idf/components/ieee802154 C:/esp_v5/idf/components/json C:/esp_v5/idf/components/log C:/esp_v5/idf/components/lwip D:/project/ESP32/WIFI_config/main C:/esp_v5/idf/components/mbedtls C:/esp_v5/idf/components/mqtt C:/esp_v5/idf/components/newlib C:/esp_v5/idf/components/nvs_flash C:/esp_v5/idf/components/openthread C:/esp_v5/idf/components/partition_table C:/esp_v5/idf/components/perfmon C:/esp_v5/idf/components/protobuf-c C:/esp_v5/idf/components/protocomm C:/esp_v5/idf/components/pthread C:/esp_v5/idf/components/sdmmc C:/esp_v5/idf/components/soc C:/esp_v5/idf/components/spi_flash C:/esp_v5/idf/components/spiffs C:/esp_v5/idf/components/tcp_transport C:/esp_v5/idf/components/ulp C:/esp_v5/idf/components/unity C:/esp_v5/idf/components/usb C:/esp_v5/idf/components/vfs C:/esp_v5/idf/components/wear_levelling C:/esp_v5/idf/components/wifi_provisioning C:/esp_v5/idf/components/wpa_supplicant C:/esp_v5/idf/components/xtensa
+-- Configuring done
+-- Generating done
+-- Build files have been written to: D:/project/ESP32/WIFI_config/build
