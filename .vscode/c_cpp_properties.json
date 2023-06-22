@@ -2,13 +2,15 @@
     "configurations": [
         {
             "name": "ESP-IDF",
-            "compilerPath": "c:\\esp_v5\\tools\\Espressif\\tools\\xtensa-esp32-elf\\esp-12.2.0_20230208\\xtensa-esp32-elf\\bin\\xtensa-esp32-elf-gcc.exe",
+            "compilerPath": "c:\\esp\\tool\\tools\\xtensa-esp32-elf\\esp-2020r3-8.4.0\\xtensa-esp32-elf\\bin\\xtensa-esp32-elf-gcc.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
             "includePath": [
                 "${config:idf.espIdfPath}/components/**",
                 "${config:idf.espIdfPathWin}/components/**",
                 "${config:idf.espAdfPath}/components/**",
                 "${config:idf.espAdfPathWin}/components/**",
-                "${workspaceFolder}/**"
+                "C:/esp/idf/components/esp_system/include"
             ],
             "browse": {
                 "path": [
@@ -20,7 +22,9 @@
                 ],
                 "limitSymbolsToIncludedHeaders": false
             },
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "configurationProvider": "ms-vscode.makefile-tools",
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4
