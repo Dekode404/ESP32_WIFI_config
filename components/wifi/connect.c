@@ -12,7 +12,25 @@ static EventGroupHandle_t Wifi_events;
 const int CONNECTED_GOT_IP = BIT0;
 const int DISCONNECTED = BIT1;
 
+/* Static stuct to store the ESP wifi interface*/
 static esp_netif_t *esp_netif;
+
+/*
+ * @brief - Function to initialize the NVS flash used by the WIFI components
+ * @note - Befor start the WIFI as the component initialize the NVS.
+ */
+void initialize_nvs(void)
+{
+    esp_err_t err = nvs_flash_init(); // initialize the default NVS partition
+
+    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        err = nvs_flash_init();
+    }
+
+    ESP_ERROR_CHECK(err);
+}
 
 static char *print_disconnection_error(wifi_err_reason_t reason)
 {
