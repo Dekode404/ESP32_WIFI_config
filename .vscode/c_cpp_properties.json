@@ -10,7 +10,7 @@
                 "${config:idf.espIdfPathWin}/components/**",
                 "${config:idf.espAdfPath}/components/**",
                 "${config:idf.espAdfPathWin}/components/**",
-                "C:/esp/idf/components/esp_system/include"
+                "${workspaceFolder}/components/wifi"
             ],
             "browse": {
                 "path": [

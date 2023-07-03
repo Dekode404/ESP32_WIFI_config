@@ -4,7 +4,6 @@
 // This used for the WIFI
 #include "nvs_flash.h"
 #include "nvs_flash.h"
-#include "intrusive_list.h"
 #include "esp_partition.h"
 #include "sdkconfig.h"
 #include "esp_err.h"
