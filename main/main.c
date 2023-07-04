@@ -15,8 +15,11 @@
 #define SSID "SSK"      // Change SSID according to the nearby wifi station
 #define PASS "12345678" // Change PASSWORD according to the nearby wifi station
 
-#define HIGH_GPIO GPIO_NUM_21
-#define SET_GPIO 1
+#define INDICATION_LED GPIO_NUM_2
+#define WIFI_MODE_SWITCH GPIO_NUM_21
+
+#define GPIO_HIGH 1
+#define GPIO_LOW 0
 
 /*
  * @brief - Function to initialize the NVS flash used by the WIFI components
@@ -35,21 +38,44 @@ void initialize_nvs(void)
     ESP_ERROR_CHECK(err);
 }
 
+void Initialize_GPIO_PIN(void)
+{
+    /* Set the GPIO as a push/pull output */
+    gpio_reset_pin(INDICATION_LED);
+    gpio_set_direction(INDICATION_LED, GPIO_MODE_OUTPUT);
+    gpio_set_level(INDICATION_LED, GPIO_LOW);
+
+    gpio_reset_pin(WIFI_MODE_SWITCH);
+    gpio_set_direction(WIFI_MODE_SWITCH, GPIO_MODE_INPUT);
+}
+
 void app_main(void)
 {
+
+    Initialize_GPIO_PIN();
+
     initialize_nvs(); // Initiate NVS which is used for the wifi
 
     wifi_init(); // Initiate wifi
 
-    if (ESP_OK == wifi_connect_sta(SSID, PASS, 5000)) // This function is not needed
-        printf("connected to the WIFI \n");
+    if (gpio_get_level(WIFI_MODE_SWITCH))
+    {
+        if (ESP_OK == wifi_connect_sta(SSID, PASS, 5000)) // This function is not needed
+            printf("connected to the WIFI \n");
+        else
+            printf("Not connected to the WIFI \n");
+    }
     else
-        printf("Not connected to the WIFI \n");
+    {
+        wifi_connect_ap(SSID, PASS); // This function is not needed
+    }
 
-    vTaskDelay(500 / portTICK_PERIOD_MS);
+    while (true)
+    {
+        gpio_set_level(INDICATION_LED, GPIO_HIGH);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
 
-    /* Set the GPIO as a push/pull output */
-    gpio_reset_pin(HIGH_GPIO);
-    gpio_set_direction(HIGH_GPIO, GPIO_MODE_OUTPUT);
-    gpio_set_level(HIGH_GPIO, SET_GPIO);
+        gpio_set_level(INDICATION_LED, GPIO_LOW);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
+    }
 }

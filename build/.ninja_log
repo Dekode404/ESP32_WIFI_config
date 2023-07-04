@@ -948,3 +948,15 @@
 47	86	7100617845989429	bootloader/bootloader.elf	a2542817e0242b4f
 47	86	7100617845989429	bootloader/bootloader.bin	a2542817e0242b4f
 47	86	7100617845989429	bootloader/bootloader.map	a2542817e0242b4f
+35	5897	7101768078741761	build.ninja	ed113d966e32a4bc
+39	134	7100617845989429	bootloader-prefix/src/bootloader-stamp/bootloader-build	a2542817e0242b4f
+39	134	7100617845989429	bootloader/bootloader.elf	a2542817e0242b4f
+39	134	7100617845989429	bootloader/bootloader.bin	a2542817e0242b4f
+39	134	7100617845989429	bootloader/bootloader.map	a2542817e0242b4f
+41	293	7101768082123255	esp-idf/app_update/CMakeFiles/__idf_app_update.dir/esp_app_desc.c.obj	ed91da82075e7f8c
+293	342	7101768082657020	esp-idf/app_update/libapp_update.a	6aede9e55588b8de
+342	672	7101768085846022	esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj	d2af099ccb81644f
+672	702	7101768086122865	esp-idf/main/libmain.a	27feb7441298acef
+703	2830	7101768107426516	esp-idf/esp32/ld/esp32.project.ld	75bccd24a8dee5e1
+2831	5308	7101768132093233	WIFI_config.elf	d6b0200a1105e2fb
+5309	5465	7101768133905393	.bin_timestamp	a167374f38a022
