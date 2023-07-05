@@ -128,6 +128,8 @@ esp_err_t get_req_handler(httpd_req_t *req)
     return response;
 }
 
+// Error due to the old file is used in this code.
+
 void ws_async_send(void *arg)
 {
     httpd_ws_frame_t ws_pkt;
