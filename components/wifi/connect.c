@@ -1,23 +1,22 @@
 #include <stdio.h>
 #include <string.h>
-#include "esp_netif.h"
-#include "esp_wifi.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
+#include "esp_netif.h"
+#include "esp_wifi.h"
 
-char *TAG = "CONNECTION";
-static EventGroupHandle_t Wifi_events;
-const int CONNECTED_GOT_IP = BIT0;
-const int DISCONNECTED = BIT1;
+const static char *TAG = "WIFI";
+esp_netif_t *esp_netif;
 
-/* Static stuct to store the ESP wifi interface*/
-static esp_netif_t *esp_netif;
+static EventGroupHandle_t wifi_events;
+static const int CONNECTED_GOT_IP = BIT0;
+static const int DISCONNECTED = BIT1;
 
-static char *print_disconnection_error(wifi_err_reason_t reason)
+const char *get_error(uint8_t code)
 {
-    switch (reason)
+    switch (code)
     {
     case WIFI_REASON_UNSPECIFIED:
         return "WIFI_REASON_UNSPECIFIED";
@@ -81,61 +80,45 @@ static char *print_disconnection_error(wifi_err_reason_t reason)
         return "WIFI_REASON_CONNECTION_FAIL";
     case WIFI_REASON_AP_TSF_RESET:
         return "WIFI_REASON_AP_TSF_RESET";
-    default:
-        return "OTHER ERROR";
     }
-
-    return "";
+    return "WIFI_REASON_UNSPECIFIED";
 }
 
-static void event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
+void event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
     switch (event_id)
     {
     case SYSTEM_EVENT_STA_START:
-        ESP_LOGI(TAG, "connecting...\n");
+        ESP_LOGI(TAG, "connecting...");
         esp_wifi_connect();
         break;
     case SYSTEM_EVENT_STA_CONNECTED:
-        ESP_LOGI(TAG, "connected\n");
-        break;
-    case IP_EVENT_STA_GOT_IP:
-        ESP_LOGI(TAG, "got ip\n");
-        xEventGroupSetBits(Wifi_events, CONNECTED_GOT_IP);
+        ESP_LOGI(TAG, "connected");
         break;
     case SYSTEM_EVENT_STA_DISCONNECTED:
     {
         wifi_event_sta_disconnected_t *wifi_event_sta_disconnected = event_data;
-        // from wifi_err_reason_t
-        ESP_LOGW(TAG, "disconnected code %d: %s \n", wifi_event_sta_disconnected->reason,
-                 print_disconnection_error(wifi_event_sta_disconnected->reason));
-        if (wifi_event_sta_disconnected->reason != WIFI_REASON_ASSOC_LEAVE)
+        if (wifi_event_sta_disconnected->reason == WIFI_REASON_ASSOC_LEAVE)
         {
-            esp_wifi_connect();
+            ESP_LOGI(TAG, "disconnected");
+            xEventGroupSetBits(wifi_events, DISCONNECTED);
             break;
         }
-        xEventGroupSetBits(Wifi_events, DISCONNECTED);
+        const char *err = get_error(wifi_event_sta_disconnected->reason);
+        ESP_LOGE(TAG, "disconnected: %s", err);
+        esp_wifi_connect();
+        // xEventGroupSetBits(wifi_events, DISCONNECTED);
     }
     break;
-    case SYSTEM_EVENT_AP_STACONNECTED:
-    {
-        wifi_event_ap_staconnected_t *connected_event = (wifi_event_ap_staconnected_t *)event_data;
-        ESP_LOGI(TAG, "station " MACSTR " joined, AID=%d", MAC2STR(connected_event->mac), connected_event->aid);
-    }
-    break;
-    case SYSTEM_EVENT_AP_STADISCONNECTED:
-    {
-        wifi_event_ap_stadisconnected_t *disconnected_event = (wifi_event_ap_stadisconnected_t *)event_data;
-        ESP_LOGI(TAG, "station " MACSTR " leave, AID=%d", MAC2STR(disconnected_event->mac), disconnected_event->aid);
-    }
-    break;
-    case SYSTEM_EVENT_AP_START:
-        ESP_LOGI(TAG, "AP Starting...\n");
+    case IP_EVENT_STA_GOT_IP:
+        ESP_LOGI(TAG, "GOT IP");
+        xEventGroupSetBits(wifi_events, CONNECTED_GOT_IP);
         break;
-
-    case SYSTEM_EVENT_AP_STOP:
-        ESP_LOGI(TAG, "AP Stopping...\n");
-        esp_netif_destroy(esp_netif);
+    case WIFI_EVENT_AP_START:
+        ESP_LOGI(TAG, "AP started");
+        break;
+    case WIFI_EVENT_AP_STOP:
+        ESP_LOGI(TAG, "AP stopped");
         break;
 
     default:
@@ -145,9 +128,8 @@ static void event_handler(void *event_handler_arg, esp_event_base_t event_base, 
 
 void wifi_init(void)
 {
-
-    esp_netif_init();
-    esp_event_loop_create_default();
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
     wifi_init_config_t wifi_init_config = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&wifi_init_config));
     ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, event_handler, NULL));
@@ -157,52 +139,50 @@ void wifi_init(void)
 
 esp_err_t wifi_connect_sta(const char *ssid, const char *pass, int timeout)
 {
-    Wifi_events = xEventGroupCreate();
+    wifi_events = xEventGroupCreate();
+
+    esp_netif = esp_netif_create_default_wifi_sta();
+
     wifi_config_t wifi_config;
     memset(&wifi_config, 0, sizeof(wifi_config_t));
     strncpy((char *)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
     strncpy((char *)wifi_config.sta.password, pass, sizeof(wifi_config.sta.password) - 1);
 
-    esp_netif = esp_netif_create_default_wifi_sta();
+    esp_wifi_set_mode(WIFI_MODE_STA);
+    esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config);
+    esp_wifi_start();
 
-    // for static ip...
-    // esp_netif_dhcpc_stop(esp_netif);
-    // esp_netif_ip_info_t ip_info;
-    // ip_info.ip.addr = ipaddr_addr("192.168.0.222");
-    // ip_info.gw.addr = ipaddr_addr("192.168.0.1");
-    // ip_info.netmask.addr = ipaddr_addr("255.255.255.0");
-    // esp_netif_set_ip_info(esp_netif, &ip_info);
-
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config));
-    ESP_ERROR_CHECK(esp_wifi_start());
-
-    EventBits_t result = xEventGroupWaitBits(Wifi_events, CONNECTED_GOT_IP | DISCONNECTED, pdTRUE, pdFALSE, pdMS_TO_TICKS(timeout));
+    EventBits_t result = xEventGroupWaitBits(wifi_events, CONNECTED_GOT_IP | DISCONNECTED, pdTRUE, pdFALSE, pdMS_TO_TICKS(timeout));
     if (result == CONNECTED_GOT_IP)
-        return 0;
-    return -1;
+    {
+        return ESP_OK;
+    }
+    return ESP_FAIL;
 }
 
 void wifi_connect_ap(const char *ssid, const char *pass)
 {
+    esp_netif = esp_netif_create_default_wifi_ap();
+
     wifi_config_t wifi_config;
     memset(&wifi_config, 0, sizeof(wifi_config_t));
-    strncpy((char *)wifi_config.ap.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
-    strncpy((char *)wifi_config.ap.password, pass, sizeof(wifi_config.sta.password) - 1);
+    strncpy((char *)wifi_config.ap.ssid, ssid, sizeof(wifi_config.ap.ssid) - 1);
+    strncpy((char *)wifi_config.ap.password, pass, sizeof(wifi_config.ap.password) - 1);
     wifi_config.ap.authmode = WIFI_AUTH_WPA_WPA2_PSK;
     wifi_config.ap.max_connection = 4;
-    wifi_config.ap.beacon_interval = 100;
 
-    esp_netif = esp_netif_create_default_wifi_ap();
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
-    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, &wifi_config));
-    ESP_ERROR_CHECK(esp_wifi_start());
+    esp_wifi_set_mode(WIFI_MODE_AP);
+    esp_wifi_set_config(ESP_IF_WIFI_AP, &wifi_config);
+    esp_wifi_start();
 }
 
 void wifi_disconnect(void)
 {
-    ESP_LOGI(TAG, "**********DISCONNECTING*********");
     esp_wifi_disconnect();
     esp_wifi_stop();
-    ESP_LOGI(TAG, "***********DISCONNECTING COMPLETE*********");
+}
+
+void wifi_destroy_netif(void)
+{
+    esp_netif_destroy(esp_netif);
 }
