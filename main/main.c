@@ -18,6 +18,27 @@ static esp_err_t set_wifi_credentials_url(httpd_req_t *req)
 static esp_err_t save_wifi_credentials_url(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "URL: %s", req->uri);
+    /////////////////////////////////////////////////////////
+
+    size_t size_of_the_query = 1 + httpd_req_get_url_query_len(req);
+
+    printf("size of the received query is %d \n", size_of_the_query);
+
+    char Buffer_for_received_the_query[size_of_the_query + 1];
+
+    httpd_req_get_url_query_str(req, Buffer_for_received_the_query, size_of_the_query);
+
+    printf("The query string received from the url - %s \n", Buffer_for_received_the_query);
+
+    size_t size_of_the_ssid = httpd_req_get_hdr_value_len(req, "ssid");
+
+    size_t size_of_the_pass = httpd_req_get_hdr_value_len(req, "password");
+
+    printf("Size for the ssid is %d \n", size_of_the_ssid);
+
+    printf("Size for the password is %d \n", size_of_the_pass);
+
+    /////////////////////////////////////////////////////////
     httpd_resp_sendstr(req, save_wifi_credentials_HTML);
     return ESP_OK;
 }
