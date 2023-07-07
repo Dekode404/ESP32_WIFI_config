@@ -1,15 +1,24 @@
 #include <stdio.h>
-#include "connect.h"
 #include "nvs_flash.h"
 #include "esp_log.h"
 #include "esp_http_server.h"
 
+#include "connect.h"
+#include "main.h"
+
 static const char *TAG = "SERVER";
 
-static esp_err_t on_default_url(httpd_req_t *req)
+static esp_err_t set_wifi_credentials_url(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "URL: %s", req->uri);
-    httpd_resp_sendstr(req, "hello world");
+    httpd_resp_sendstr(req, set_wifi_credentials_HTML);
+    return ESP_OK;
+}
+
+static esp_err_t save_wifi_credentials_url(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "URL: %s", req->uri);
+    httpd_resp_sendstr(req, save_wifi_credentials_HTML);
     return ESP_OK;
 }
 
@@ -20,11 +29,17 @@ static void init_server()
 
     ESP_ERROR_CHECK(httpd_start(&server, &config));
 
-    httpd_uri_t default_url = {
+    httpd_uri_t set_wifi_credentials_url_handler = {
         .uri = "/",
         .method = HTTP_GET,
-        .handler = on_default_url};
-    httpd_register_uri_handler(server, &default_url);
+        .handler = set_wifi_credentials_url};
+    httpd_register_uri_handler(server, &set_wifi_credentials_url_handler);
+
+    httpd_uri_t save_wifi_credentials_url_handler = {
+        .uri = "/save_credentials",
+        .method = HTTP_GET,
+        .handler = save_wifi_credentials_url};
+    httpd_register_uri_handler(server, &save_wifi_credentials_url_handler);
 }
 
 void app_main(void)
