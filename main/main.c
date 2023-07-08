@@ -30,14 +30,13 @@ static esp_err_t save_wifi_credentials_url(httpd_req_t *req)
 
     printf("The query string received from the url - %s \n", Buffer_for_received_the_query);
 
-    size_t size_of_the_ssid = httpd_req_get_hdr_value_len(req, "ssid");
+    char SSID_buffer[10];
+    char PASS_buffer[10];
 
-    size_t size_of_the_pass = httpd_req_get_hdr_value_len(req, "password");
+    httpd_query_key_value(Buffer_for_received_the_query, "ssid", SSID_buffer, 10);
+    httpd_query_key_value(Buffer_for_received_the_query, "password", PASS_buffer, 10);
 
-    printf("Size for the ssid is %d \n", size_of_the_ssid);
-
-    printf("Size for the password is %d \n", size_of_the_pass);
-
+    printf("SSID is - %s \n SSID size of the string is %d \n PASSWORD - %s \n Password size of the string is %d \n", SSID_buffer, strlen(SSID_buffer), PASS_buffer, strlen(PASS_buffer));
     /////////////////////////////////////////////////////////
     httpd_resp_sendstr(req, save_wifi_credentials_HTML);
     return ESP_OK;
