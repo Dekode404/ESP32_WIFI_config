@@ -6,6 +6,9 @@
 #include "connect.h"
 #include "main.h"
 
+#define AP_SSID "ESP32_SETUP"   // This SSID used for the setup the AP
+#define AP_password "123456789" // This Password used for the setup the AP
+
 static const char *TAG = "SERVER";
 
 // This struct is for the storing the WIFI credentials
@@ -73,7 +76,7 @@ static esp_err_t read_the_wifi_credentials_from_NVS(WIFI_CREDENTIALS_t *wifi_cre
 static esp_err_t set_wifi_credentials_url(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "URL: %s", req->uri);
-    httpd_resp_sendstr(req, set_wifi_credentials_HTML);
+    httpd_resp_sendstr(req, STATIC_HOME_PAGE);
     return ESP_OK;
 }
 
@@ -101,7 +104,7 @@ static esp_err_t save_wifi_credentials_url(httpd_req_t *req)
 
     save_the_wifi_credentials_into_NVS(&wifi_credentials_received_from_WEB_page);
 
-    httpd_resp_sendstr(req, save_wifi_credentials_HTML);
+    httpd_resp_sendstr(req, STATIC_SAVE_PAGE);
     return ESP_OK;
 }
 
@@ -131,14 +134,19 @@ void app_main(void)
 
     WIFI_CREDENTIALS_t wifi_credentials_read_from_NVS;
 
-    if (read_the_wifi_credentials_from_NVS(&wifi_credentials_read_from_NVS) == ESP_OK)
+    if (read_the_wifi_credentials_from_NVS(&wifi_credentials_read_from_NVS) != ESP_OK)
     {
+        wifi_init(); // Initialize the server so user can set the wifi parameters over the WEB
+
+        wifi_connect_ap(AP_SSID, AP_password);
+
+        init_server();
+    }
+
+    if (wifi_connect_sta(wifi_credentials_read_from_NVS.WIFI_SSID, wifi_credentials_read_from_NVS.WIFI_PASSWORD, 10000) == ESP_OK)
+    {
+        printf("Connected \n");
     }
 
     printf(" SSID is - %s \n SSID size of the string is %d \n PASSWORD - %s \n Password size of the string is %d \n", wifi_credentials_read_from_NVS.WIFI_SSID, strlen(wifi_credentials_read_from_NVS.WIFI_SSID), wifi_credentials_read_from_NVS.WIFI_PASSWORD, strlen(wifi_credentials_read_from_NVS.WIFI_PASSWORD));
-
-    wifi_init();
-    wifi_connect_ap("POCO", "password");
-
-    init_server();
 }
