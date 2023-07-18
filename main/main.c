@@ -6,7 +6,7 @@
 #include "connect.h"
 #include "main.h"
 
-#define AP_SSID "ESP32_SETUP"   // This SSID used for the setup the AP
+#define AP_ssid "ESP32_SETUP"   // This SSID used for the setup the AP
 #define AP_password "123456789" // This Password used for the setup the AP
 
 static const char *TAG = "SERVER";
@@ -134,19 +134,16 @@ void app_main(void)
 
     WIFI_CREDENTIALS_t wifi_credentials_read_from_NVS;
 
+    wifi_init(); // Initialize the WIFI.
+
     if (read_the_wifi_credentials_from_NVS(&wifi_credentials_read_from_NVS) != ESP_OK)
     {
-        wifi_init(); // Initialize the server so user can set the wifi parameters over the WEB
+        wifi_connect_ap(AP_ssid, AP_password);
 
-        wifi_connect_ap(AP_SSID, AP_password);
-
-        init_server();
+        init_server(); // Initialize the server so user can set the wifi parameters over the WEB
     }
 
-    if (wifi_connect_sta(wifi_credentials_read_from_NVS.WIFI_SSID, wifi_credentials_read_from_NVS.WIFI_PASSWORD, 10000) == ESP_OK)
-    {
-        printf("Connected \n");
-    }
+    wifi_connect_sta(wifi_credentials_read_from_NVS.WIFI_SSID, wifi_credentials_read_from_NVS.WIFI_PASSWORD, 10000);
 
     printf(" SSID is - %s \n SSID size of the string is %d \n PASSWORD - %s \n Password size of the string is %d \n", wifi_credentials_read_from_NVS.WIFI_SSID, strlen(wifi_credentials_read_from_NVS.WIFI_SSID), wifi_credentials_read_from_NVS.WIFI_PASSWORD, strlen(wifi_credentials_read_from_NVS.WIFI_PASSWORD));
 }
