@@ -14,9 +14,8 @@ static const char *TAG = "SERVER";
 // This struct is for the storing the WIFI credentials
 typedef struct
 {
-    char WIFI_SSID[10];
-
-    char WIFI_PASSWORD[20];
+    char WIFI_SSID[10];     // 10 byte storage for the SSID
+    char WIFI_PASSWORD[20]; // 20 byte storage for the password
 
 } WIFI_CREDENTIALS_t;
 
@@ -47,13 +46,14 @@ static esp_err_t save_the_wifi_credentials_into_NVS(WIFI_CREDENTIALS_t *wifi_cre
  */
 static esp_err_t read_the_wifi_credentials_from_NVS(WIFI_CREDENTIALS_t *wifi_credentials)
 {
-    nvs_handle NVS_handler;
+    nvs_handle NVS_handler; // NVS handler initialize
 
+    // Open non-volatile storage with a given namespace from the default NVS partition
     nvs_open("my_credentials", NVS_READWRITE, &NVS_handler);
 
-    size_t i = sizeof(WIFI_CREDENTIALS_t);
+    size_t size_of_the_wifi_credentials = sizeof(WIFI_CREDENTIALS_t);
 
-    esp_err_t result = nvs_get_blob(NVS_handler, "Credentials", wifi_credentials, &i);
+    esp_err_t result = nvs_get_blob(NVS_handler, "Credentials", wifi_credentials, &size_of_the_wifi_credentials);
 
     switch (result)
     {
@@ -72,6 +72,7 @@ static esp_err_t read_the_wifi_credentials_from_NVS(WIFI_CREDENTIALS_t *wifi_cre
         break;
     }
 
+    // Close the storage handle and free any allocated resources
     nvs_close(NVS_handler);
 
     return result;
