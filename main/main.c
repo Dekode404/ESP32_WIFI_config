@@ -25,14 +25,18 @@ typedef struct
  */
 static esp_err_t save_the_wifi_credentials_into_NVS(WIFI_CREDENTIALS_t *wifi_credentials)
 {
-    nvs_handle NVS_handler;
+    nvs_handle NVS_handler; // NVS handler initialize
 
+    // Open non-volatile storage with a given namespace from the default NVS partition
     ESP_ERROR_CHECK(nvs_open("my_credentials", NVS_READWRITE, &NVS_handler));
 
+    // set variable length binary value for given key
     ESP_ERROR_CHECK(nvs_set_blob(NVS_handler, "Credentials", wifi_credentials, sizeof(WIFI_CREDENTIALS_t)));
 
+    // Write any pending changes to non-volatile storage
     ESP_ERROR_CHECK(nvs_commit(NVS_handler));
 
+    // Close the storage handle and free any allocated resources
     nvs_close(NVS_handler);
 
     return ESP_OK;
