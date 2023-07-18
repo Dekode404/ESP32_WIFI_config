@@ -108,19 +108,25 @@ static esp_err_t save_wifi_credentials_url(httpd_req_t *req)
     return ESP_OK;
 }
 
-static void init_server()
+/*
+ * Function for starting the webserver. URI handlers can be registered in real time as long as the
+ * server handle is valid.
+ */
+static void init_web_server()
 {
-    httpd_handle_t server = NULL;
-    httpd_config_t config = HTTPD_DEFAULT_CONFIG();
+    httpd_handle_t server = NULL;                   // Declination of the server handler.
+    httpd_config_t config = HTTPD_DEFAULT_CONFIG(); // Declination of the server configuration.
 
-    ESP_ERROR_CHECK(httpd_start(&server, &config));
+    ESP_ERROR_CHECK(httpd_start(&server, &config)); // Start the server wi the default settting
 
+    /* This URL is for the home page */
     httpd_uri_t set_wifi_credentials_url_handler = {
         .uri = "/",
         .method = HTTP_GET,
         .handler = set_wifi_credentials_url};
     httpd_register_uri_handler(server, &set_wifi_credentials_url_handler);
 
+    /* This URL is for the save the wifi setting into the NVS */
     httpd_uri_t save_wifi_credentials_url_handler = {
         .uri = "/save_credentials",
         .method = HTTP_GET,
@@ -140,7 +146,7 @@ void app_main(void)
     {
         wifi_connect_ap(AP_ssid, AP_password);
 
-        init_server(); // Initialize the server so user can set the wifi parameters over the WEB
+        init_web_server(); // Initialize the server so user can set the wifi parameters over the WEB
     }
 
     wifi_connect_sta(wifi_credentials_read_from_NVS.WIFI_SSID, wifi_credentials_read_from_NVS.WIFI_PASSWORD, 10000);
