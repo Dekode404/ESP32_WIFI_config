@@ -6,12 +6,14 @@
 #include "connect.h"
 #include "main.h"
 
-// #define DEBUG_CODE
+#define DEBUG_CODE
 
 #define AP_ssid "ESP32_SETUP"   // This SSID used for the setup the AP
 #define AP_password "123456789" // This Password used for the setup the AP
 
+#ifdef DEBUG_CODE
 static const char *TAG = "SERVER";
+#endif
 
 // This struct is for the storing the WIFI credentials
 typedef struct
@@ -87,7 +89,10 @@ static esp_err_t read_the_wifi_credentials_from_NVS(WIFI_CREDENTIALS_t *wifi_cre
  */
 static esp_err_t set_wifi_credentials_url(httpd_req_t *req)
 {
+#ifdef DEBUG_CODE
     ESP_LOGI(TAG, "URL: %s", req->uri);
+#endif
+
     httpd_resp_sendstr(req, STATIC_HOME_PAGE);
     return ESP_OK;
 }
@@ -97,12 +102,14 @@ static esp_err_t set_wifi_credentials_url(httpd_req_t *req)
  */
 static esp_err_t save_wifi_credentials_url(httpd_req_t *req)
 {
+#ifdef DEBUG_CODE
     ESP_LOGI(TAG, "URL: %s", req->uri);
+#endif
 
     size_t size_of_the_query = 1 + httpd_req_get_url_query_len(req); // Get the size of the query
 
 #ifdef DEBUG_CODE
-    printf("size of the received query is %d \n", size_of_the_query);
+    ESP_LOGI(TAG, "size of the received query is %d ", size_of_the_query);
 #endif
 
     char Buffer_for_received_the_query[size_of_the_query + 1];
@@ -110,15 +117,19 @@ static esp_err_t save_wifi_credentials_url(httpd_req_t *req)
     httpd_req_get_url_query_str(req, Buffer_for_received_the_query, size_of_the_query);
 
 #ifdef DEBUG_CODE
-    printf("The query string received from the url - %s \n", Buffer_for_received_the_query);
+    ESP_LOGI(TAG, "The query string received from the url - %s ", Buffer_for_received_the_query);
 #endif
+
     WIFI_CREDENTIALS_t wifi_credentials_received_from_WEB_page;
 
     httpd_query_key_value(Buffer_for_received_the_query, "ssid", wifi_credentials_received_from_WEB_page.WIFI_SSID, 10);
     httpd_query_key_value(Buffer_for_received_the_query, "password", wifi_credentials_received_from_WEB_page.WIFI_PASSWORD, 20);
 
 #ifdef DEBUG_CODE
-    printf("SSID is - %s \n SSID size of the string is %d \n PASSWORD - %s \n Password size of the string is %d \n", wifi_credentials_received_from_WEB_page.WIFI_SSID, strlen(wifi_credentials_received_from_WEB_page.WIFI_SSID), wifi_credentials_received_from_WEB_page.WIFI_PASSWORD, strlen(wifi_credentials_received_from_WEB_page.WIFI_PASSWORD));
+    ESP_LOGI(TAG, "SSID - %s", wifi_credentials_received_from_WEB_page.WIFI_SSID);
+    ESP_LOGI(TAG, "SSID size - %d", strlen(wifi_credentials_received_from_WEB_page.WIFI_SSID));
+    ESP_LOGI(TAG, "PASSWORD - %s", wifi_credentials_received_from_WEB_page.WIFI_PASSWORD);
+    ESP_LOGI(TAG, "Password size - %d ", strlen(wifi_credentials_received_from_WEB_page.WIFI_PASSWORD));
 #endif
 
     save_the_wifi_credentials_into_NVS(&wifi_credentials_received_from_WEB_page);
@@ -151,6 +162,11 @@ static void init_web_server()
         .method = HTTP_GET,
         .handler = save_wifi_credentials_url};
     httpd_register_uri_handler(server, &save_wifi_credentials_url_handler);
+
+    while (true)
+    {
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
 }
 
 void app_main(void)
@@ -171,6 +187,9 @@ void app_main(void)
     wifi_connect_sta(wifi_credentials_read_from_NVS.WIFI_SSID, wifi_credentials_read_from_NVS.WIFI_PASSWORD, 10000);
 
 #ifdef DEBUG_CODE
-    printf(" SSID is - %s \n SSID size of the string is %d \n PASSWORD - %s \n Password size of the string is %d \n", wifi_credentials_read_from_NVS.WIFI_SSID, strlen(wifi_credentials_read_from_NVS.WIFI_SSID), wifi_credentials_read_from_NVS.WIFI_PASSWORD, strlen(wifi_credentials_read_from_NVS.WIFI_PASSWORD));
+    ESP_LOGI(TAG, "SSID - %s", wifi_credentials_read_from_NVS.WIFI_SSID);
+    ESP_LOGI(TAG, "SSID size - %d", strlen(wifi_credentials_read_from_NVS.WIFI_SSID));
+    ESP_LOGI(TAG, "PASSWORD - %s", wifi_credentials_read_from_NVS.WIFI_PASSWORD);
+    ESP_LOGI(TAG, "Password size - %d ", strlen(wifi_credentials_read_from_NVS.WIFI_PASSWORD));
 #endif
 }
