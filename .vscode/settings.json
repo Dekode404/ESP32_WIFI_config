@@ -44,7 +44,10 @@
         "string_view": "c",
         "esp_http_server.h": "c",
         "typeinfo": "cpp",
-        "*.inc": "c"
+        "*.inc": "c",
+        "event_groups.h": "c",
+        "esp_netif.h": "c",
+        "main.h": "c"
     },
     "cSpell.words": [
         "ALLON",
