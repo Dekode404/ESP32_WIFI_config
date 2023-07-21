@@ -47,7 +47,9 @@
         "*.inc": "c",
         "event_groups.h": "c",
         "esp_netif.h": "c",
-        "main.h": "c"
+        "main.h": "c",
+        "web_server.h": "c",
+        "esp_err.h": "c"
     },
     "cSpell.words": [
         "ALLON",
