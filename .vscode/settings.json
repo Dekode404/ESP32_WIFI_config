@@ -43,6 +43,7 @@
         "string": "c",
         "string_view": "c",
         "esp_http_server.h": "c",
+<<<<<<< HEAD
         "typeinfo": "cpp",
         "*.inc": "c",
         "event_groups.h": "c",
@@ -50,6 +51,9 @@
         "main.h": "c",
         "web_server.h": "c",
         "esp_err.h": "c"
+=======
+        "typeinfo": "cpp"
+>>>>>>> parent of 4694a12 (add the while loop into the init_web_server function to stay into the AP mode when the SSID & PASSWORD is not find from the NVS)
     },
     "cSpell.words": [
         "ALLON",

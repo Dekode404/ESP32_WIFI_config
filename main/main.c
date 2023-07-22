@@ -1,4 +1,5 @@
-#include "main.h"
+#include "connect.h"
+#include "wifi_manager.h"
 
 // #define DEBUG_CODE
 
@@ -23,9 +24,6 @@ void app_main(void)
     wifi_connect_sta(wifi_credentials_read_from_NVS.WIFI_SSID, wifi_credentials_read_from_NVS.WIFI_PASSWORD, 10000);
 
 #ifdef DEBUG_CODE
-    ESP_LOGI(TAG, "SSID - %s", wifi_credentials_read_from_NVS.WIFI_SSID);
-    ESP_LOGI(TAG, "SSID size - %d", strlen(wifi_credentials_read_from_NVS.WIFI_SSID));
-    ESP_LOGI(TAG, "PASSWORD - %s", wifi_credentials_read_from_NVS.WIFI_PASSWORD);
-    ESP_LOGI(TAG, "Password size - %d ", strlen(wifi_credentials_read_from_NVS.WIFI_PASSWORD));
+    printf(" SSID is - %s \n SSID size of the string is %d \n PASSWORD - %s \n Password size of the string is %d \n", wifi_credentials_read_from_NVS.WIFI_SSID, strlen(wifi_credentials_read_from_NVS.WIFI_SSID), wifi_credentials_read_from_NVS.WIFI_PASSWORD, strlen(wifi_credentials_read_from_NVS.WIFI_PASSWORD));
 #endif
 }

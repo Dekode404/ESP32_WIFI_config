@@ -8,9 +8,6 @@
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 
-#include "esp_http_server.h"
-#include "nvs_flash.h"
-
 #include "esp_log.h"
 #include "esp_err.h"
 
@@ -18,9 +15,6 @@
 #include "esp_wifi.h"
 
 #include "connect.h"
-#include "web_server.h"
-
-#include "main.h"
 
 void wifi_init(void);
 esp_err_t wifi_connect_sta(const char *ssid, const char *pass, int timeout);

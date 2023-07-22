@@ -1,6 +1,6 @@
 idf_component_register(
         SRCS 
-            "connect.c,web_server.c"
+            "connect.c"
         INCLUDE_DIRS 
             "."
         )
