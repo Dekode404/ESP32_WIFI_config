@@ -1944,3 +1944,16 @@
 38	73	7116205437317409	bootloader/bootloader.bin	a2542817e0242b4f
 38	73	7116205437317409	bootloader/bootloader.map	a2542817e0242b4f
 73	16077	0	CMakeFiles/flash	a81a401f17db20ba
+3	5846	7117139611121522	build.ninja	ed113d966e32a4bc
+41	91	7116205437317409	bootloader-prefix/src/bootloader-stamp/bootloader-build	a2542817e0242b4f
+41	91	7116205437317409	bootloader/bootloader.elf	a2542817e0242b4f
+41	91	7116205437317409	bootloader/bootloader.bin	a2542817e0242b4f
+41	91	7116205437317409	bootloader/bootloader.map	a2542817e0242b4f
+44	293	7117139614533956	esp-idf/app_update/CMakeFiles/__idf_app_update.dir/esp_app_desc.c.obj	3482012642440d68
+293	342	7117139615094810	esp-idf/app_update/libapp_update.a	6aede9e55588b8de
+343	393	7117139615573193	esp-idf/main/CMakeFiles/__idf_main.dir/wifi_manager.c.obj	3c22974379c56531
+344	880	7117139620323923	esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj	c1cd400780dd3cd2
+881	924	7117139620911929	esp-idf/main/libmain.a	2590f25536b1a3f7
+924	2045	7117139631739111	esp-idf/esp32/ld/esp32.project.ld	75bccd24a8dee5e1
+2045	4338	7117139654829816	WIFI_config.elf	d6b0200a1105e2fb
+4339	4525	7117139656916685	.bin_timestamp	a167374f38a022
