@@ -15,7 +15,6 @@
 #include "esp_err.h"
 
 #include "esp_netif.h"
-#include "esp_wifi.h"
 
 #define AP_SSID "ESP32"
 #define AP_PASS "12345678"
