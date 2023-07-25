@@ -145,27 +145,49 @@ void wifi_init(void)
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
 }
 
+/*
+ * @brief  function is used for the connect the WIFI to the station network.
+
+ * @param[in] ssid - SSID of the WIFI network over which 2we have to th3e connect.
+ * @param[in] pass - credentials of the wifi network over which we have to the connect.
+ * @param[in] timeout - Time out if the ESP is not able to connect to the WIFI network.
+ *
+ * @return
+ *   - ESP_OK: succeed
+ *   - ESP_FAIL: WiFi is not able to connect with the WIFI network
+ */
 esp_err_t wifi_connect_sta(const char *ssid, const char *pass, int timeout)
 {
-    wifi_events = xEventGroupCreate();
+    wifi_events = xEventGroupCreate(); // Creat the event group for the WIFI sta mode.
 
-    esp_netif = esp_netif_create_default_wifi_sta();
+    esp_netif = esp_netif_create_default_wifi_sta(); // Creates default WIFI STA. In case of any init error this API aborts.
 
-    wifi_config_t wifi_config;
-    memset(&wifi_config, 0, sizeof(wifi_config_t));
-    strncpy((char *)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
-    strncpy((char *)wifi_config.sta.password, pass, sizeof(wifi_config.sta.password) - 1);
+    wifi_config_t wifi_config;                      // Initialize the variable to hold the credential parameters of the WIFI network.
+    memset(&wifi_config, 0, sizeof(wifi_config_t)); // Set to zero
 
-    esp_wifi_set_mode(WIFI_MODE_STA);
-    esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config);
-    esp_wifi_start();
+    strncpy((char *)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);         // copy the SSID
+    strncpy((char *)wifi_config.sta.password, pass, sizeof(wifi_config.sta.password) - 1); // copy the password
 
+    esp_wifi_set_mode(WIFI_MODE_STA);                   // Set the WiFi operating mode to the station.
+    esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config); // Pass the credential parameters of the WIFI network
+    esp_wifi_start();                                   // Start WiFi according to current configuration
+
+    /*
+     * block to wait for one bits to be set within a previously created event group.
+     */
     EventBits_t result = xEventGroupWaitBits(wifi_events, CONNECTED_GOT_IP | DISCONNECTED, pdTRUE, pdFALSE, pdMS_TO_TICKS(timeout));
+
+    esp_err_t function_status = ESP_FAIL; // Initialize the variable to return the function status of the WIFI is connected or not.
+
+    /*
+     * If the WIFI is connected successfully to the station network change the function_status to the successful.
+     */
     if (result == CONNECTED_GOT_IP)
     {
-        return ESP_OK;
+        function_status = ESP_OK;
     }
-    return ESP_FAIL;
+
+    return function_status;
 }
 
 void wifi_connect_ap(const char *ssid, const char *pass)
