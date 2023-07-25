@@ -119,14 +119,29 @@ void event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t
     }
 }
 
+/*
+ * This function is for start the WIFI peripheral in the ESP
+ */
 void wifi_init(void)
 {
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
-    wifi_init_config_t wifi_init_config = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_netif_init());                // Initialize the underlying TCP/IP stack
+    ESP_ERROR_CHECK(esp_event_loop_create_default()); // Create default event loop
+
+    wifi_init_config_t wifi_init_config = WIFI_INIT_CONFIG_DEFAULT(); //  WiFi stack configuration parameters to the default
+
+    /*
+     *Initialize WiFi Allocate resource for WiFi driver, such as WiFi control structure,
+     * RX/TX buffer, WiFi NVS structure etc. This WiFi also starts WiFi task
+     */
     ESP_ERROR_CHECK(esp_wifi_init(&wifi_init_config));
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, event_handler, NULL));
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, event_handler, NULL));
+
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, event_handler, NULL));  // Register an WIFI event handler to the system event loop (legacy).
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, event_handler, NULL)); // Register an IP event handler to the system event loop (legacy).
+
+    /*
+     * Set the WiFi API configuration storage type.
+     * For this we have the two options - WIFI_STORAGE_RAM & WIFI_STORAGE_RAM
+     */
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
 }
 
