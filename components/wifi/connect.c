@@ -206,13 +206,24 @@ void wifi_connect_ap(const char *ssid, const char *pass)
     esp_wifi_start();
 }
 
+/*
+ * This function is used for the disconnect the WIFI from the current access-point network
+ */
 void wifi_disconnect(void)
 {
-    esp_wifi_disconnect();
+    esp_wifi_disconnect(); // Disconnect the ESP32 WiFi station from the AP.
+
+    /*
+     * Stop WiFi (mode is WIFI_MODE_STA) stop station and free station control block.
+     */
     esp_wifi_stop();
 }
 
+/*
+ * This function is used for the Destroys the esp_netif object.
+ * @brief - while change the WIFI mode from the STA to the AP or vise varas then need to Destroys the esp_netif object to free the control block.
+ */
 void wifi_destroy_netif(void)
 {
-    esp_netif_destroy(esp_netif);
+    esp_netif_destroy(esp_netif); // Destroys the esp_netif object
 }
