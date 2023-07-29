@@ -116,7 +116,23 @@ esp_err_t save_wifi_credentials_url(httpd_req_t *req)
 }
 
 /*
- * Function for starting the webserver. URI handlers can be registered in real time as long as the
+ * This function is used for the Initialize the ondemand switch GPIO pin.
+ */
+esp_err_t Initialize_GPIO_for_on_demand_portal(void)
+{
+    gpio_config_t on_demand_switch_configuration; // Initialize GPIO configuration variable for the on demand WIFI switch
+
+    on_demand_switch_configuration.mode = GPIO_MODE_INPUT;
+    on_demand_switch_configuration.pull_down_en = false;
+    on_demand_switch_configuration.pull_up_en = true;
+    on_demand_switch_configuration.intr_type = GPIO_INTR_NEGEDGE;
+    on_demand_switch_configuration.pin_bit_mask = (1ULL << ON_DEMAND_SWITCH_GPIO);
+
+    return gpio_config(&on_demand_switch_configuration);
+}
+
+/*
+ * Function for starting the web server. URI handlers can be registered in real time as long as the
  * server handle is valid.
  */
 void init_web_server(void)

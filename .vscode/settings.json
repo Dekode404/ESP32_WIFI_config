@@ -35,6 +35,7 @@
     "hpoint",
     "ledc",
     "LOGI",
+    "NEGEDGE",
     "netif",
     "PMKID",
     "PWRCAP",
