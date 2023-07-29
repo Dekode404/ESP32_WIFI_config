@@ -23,8 +23,23 @@
     "regex": "c",
     "tuple": "c",
     "type_traits": "c",
-    "utility": "c"
+    "utility": "c",
+    "*.inc": "c"
   },
-  "cSpell.words": ["hpoint", "ledc"],
+  "cSpell.words": [
+    "AKMP",
+    "ASSOCED",
+    "authmode",
+    "DISASSOC",
+    "hpoint",
+    "ledc",
+    "LOGI",
+    "netif",
+    "PMKID",
+    "PWRCAP",
+    "SSID",
+    "SUPCHAN",
+    "TOOMANY"
+  ],
   "idf.portWin": "COM4"
 }

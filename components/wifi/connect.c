@@ -3,10 +3,14 @@
 const static char *TAG = "WIFI";
 esp_netif_t *esp_netif;
 
-static EventGroupHandle_t wifi_events;
+static EventGroupHandle_t wifi_events; //
+
 static const int CONNECTED_GOT_IP = BIT0;
 static const int DISCONNECTED = BIT1;
 
+/*
+ * This function is used for the debug purpose. According to the error this return the char string pointer that contain the error message.
+ */
 const char *get_error(uint8_t code)
 {
     switch (code)
@@ -77,42 +81,68 @@ const char *get_error(uint8_t code)
     return "WIFI_REASON_UNSPECIFIED";
 }
 
-void event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
+/*
+ * This function is for handling the all the WIFI related events.
+ */
+void WIFI_event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
     switch (event_id)
     {
-    case SYSTEM_EVENT_STA_START:
-        ESP_LOGI(TAG, "connecting...");
-        esp_wifi_connect();
-        break;
-    case SYSTEM_EVENT_STA_CONNECTED:
-        ESP_LOGI(TAG, "connected");
-        break;
-    case SYSTEM_EVENT_STA_DISCONNECTED:
+    case SYSTEM_EVENT_STA_START: // Connecting to forcefully to the AP network.
     {
+        ESP_LOGI(TAG, "connecting...");
+        esp_wifi_connect(); // Connect the ESP32 WiFi station to the AP network. [configured while start the STA mode]
+    }
+    break;
+
+    case SYSTEM_EVENT_STA_CONNECTED: // ESP32 connected successfully to the WIFI network.
+    {
+        ESP_LOGI(TAG, "connected");
+    }
+    break;
+
+    case SYSTEM_EVENT_STA_DISCONNECTED: // ESP32 Disconnected from the AP network
+    {
+        /* Initialize argument structure for WIFI_EVENT_STA_DISCONNECTED event*/
         wifi_event_sta_disconnected_t *wifi_event_sta_disconnected = event_data;
+
+        // If the disconnection reason is due to AP network is not alliable.
         if (wifi_event_sta_disconnected->reason == WIFI_REASON_ASSOC_LEAVE)
         {
             ESP_LOGI(TAG, "disconnected");
             xEventGroupSetBits(wifi_events, DISCONNECTED);
             break;
         }
+
+        /*
+         * To debug the WIFI disconnection pass the disconnection code to the get_error function so the we can get the disconnection message,
+         */
         const char *err = get_error(wifi_event_sta_disconnected->reason);
         ESP_LOGE(TAG, "disconnected: %s", err);
+
         esp_wifi_connect();
         // xEventGroupSetBits(wifi_events, DISCONNECTED);
     }
     break;
+
     case IP_EVENT_STA_GOT_IP:
+    {
         ESP_LOGI(TAG, "GOT IP");
-        xEventGroupSetBits(wifi_events, CONNECTED_GOT_IP);
-        break;
-    case WIFI_EVENT_AP_START:
+        xEventGroupSetBits(wifi_events, CONNECTED_GOT_IP); // Set the BIT of connection is successful.
+    }
+    break;
+
+    case WIFI_EVENT_AP_START: // ESP32 start in the AP mode
+    {
         ESP_LOGI(TAG, "AP started");
-        break;
-    case WIFI_EVENT_AP_STOP:
+    }
+    break;
+
+    case WIFI_EVENT_AP_STOP: // AP mode is stop
+    {
         ESP_LOGI(TAG, "AP stopped");
-        break;
+    }
+    break;
 
     default:
         break;
@@ -135,8 +165,8 @@ void wifi_init(void)
      */
     ESP_ERROR_CHECK(esp_wifi_init(&wifi_init_config));
 
-    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, event_handler, NULL));  // Register an WIFI event handler to the system event loop (legacy).
-    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, event_handler, NULL)); // Register an IP event handler to the system event loop (legacy).
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, WIFI_event_handler, NULL));  // Register an WIFI event handler to the system event loop (legacy).
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, WIFI_event_handler, NULL)); // Register an IP event handler to the system event loop (legacy).
 
     /*
      * Set the WiFi API configuration storage type.
@@ -192,18 +222,20 @@ esp_err_t wifi_connect_sta(const char *ssid, const char *pass, int timeout)
 
 void wifi_connect_ap(const char *ssid, const char *pass)
 {
-    esp_netif = esp_netif_create_default_wifi_ap();
+    esp_netif = esp_netif_create_default_wifi_ap(); // Creates default WIFI STA. In case of any init error this API aborts.
 
-    wifi_config_t wifi_config;
-    memset(&wifi_config, 0, sizeof(wifi_config_t));
-    strncpy((char *)wifi_config.ap.ssid, ssid, sizeof(wifi_config.ap.ssid) - 1);
-    strncpy((char *)wifi_config.ap.password, pass, sizeof(wifi_config.ap.password) - 1);
-    wifi_config.ap.authmode = WIFI_AUTH_WPA_WPA2_PSK;
-    wifi_config.ap.max_connection = 4;
+    wifi_config_t wifi_config;                      // Initialize the variable to hold the credential parameters of the WIFI network.
+    memset(&wifi_config, 0, sizeof(wifi_config_t)); // Clear the memory to avoid the garbage value.
 
-    esp_wifi_set_mode(WIFI_MODE_AP);
-    esp_wifi_set_config(ESP_IF_WIFI_AP, &wifi_config);
-    esp_wifi_start();
+    strncpy((char *)wifi_config.ap.ssid, ssid, sizeof(wifi_config.ap.ssid) - 1);         // copy the SSID
+    strncpy((char *)wifi_config.ap.password, pass, sizeof(wifi_config.ap.password) - 1); // copy the PASS
+
+    wifi_config.ap.authmode = WIFI_AUTH_WPA_WPA2_PSK; // Set the wifi authentication mode to the WPA2
+    wifi_config.ap.max_connection = 2;                // St the max connection the can connected to the ESP32 when ESP is in AP mode is set to the 2.
+
+    esp_wifi_set_mode(WIFI_MODE_AP);                   // Set the WiFi operating mode to the station.
+    esp_wifi_set_config(ESP_IF_WIFI_AP, &wifi_config); // Pass the credential parameters of the AP WIFI network
+    esp_wifi_start();                                  // Start WiFi according to current configuration
 }
 
 /*
