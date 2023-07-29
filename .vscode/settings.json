@@ -24,7 +24,8 @@
     "tuple": "c",
     "type_traits": "c",
     "utility": "c",
-    "*.inc": "c"
+    "*.inc": "c",
+    "future": "c"
   },
   "cSpell.words": [
     "AKMP",

@@ -3,10 +3,7 @@
 const static char *TAG = "WIFI";
 esp_netif_t *esp_netif;
 
-static EventGroupHandle_t wifi_events; //
-
-static const int CONNECTED_GOT_IP = BIT0;
-static const int DISCONNECTED = BIT1;
+static EventGroupHandle_t wifi_events; // event handler for the WIFI
 
 /*
  * This function is used for the debug purpose. According to the error this return the char string pointer that contain the error message.
@@ -110,7 +107,7 @@ void WIFI_event_handler(void *event_handler_arg, esp_event_base_t event_base, in
         if (wifi_event_sta_disconnected->reason == WIFI_REASON_ASSOC_LEAVE)
         {
             ESP_LOGI(TAG, "disconnected");
-            xEventGroupSetBits(wifi_events, DISCONNECTED);
+            xEventGroupSetBits(wifi_events, ESP32_DISCONNECTED);
             break;
         }
 
@@ -121,14 +118,14 @@ void WIFI_event_handler(void *event_handler_arg, esp_event_base_t event_base, in
         ESP_LOGE(TAG, "disconnected: %s", err);
 
         esp_wifi_connect();
-        // xEventGroupSetBits(wifi_events, DISCONNECTED);
+        // xEventGroupSetBits(wifi_events, ESP32_DISCONNECTED);
     }
     break;
 
     case IP_EVENT_STA_GOT_IP:
     {
         ESP_LOGI(TAG, "GOT IP");
-        xEventGroupSetBits(wifi_events, CONNECTED_GOT_IP); // Set the BIT of connection is successful.
+        xEventGroupSetBits(wifi_events, ESP32_GOT_IP); // Set the BIT of connection is successful.
     }
     break;
 
@@ -205,14 +202,14 @@ esp_err_t wifi_connect_sta(const char *ssid, const char *pass, int timeout)
     /*
      * block to wait for one bits to be set within a previously created event group.
      */
-    EventBits_t result = xEventGroupWaitBits(wifi_events, CONNECTED_GOT_IP | DISCONNECTED, pdTRUE, pdFALSE, pdMS_TO_TICKS(timeout));
+    EventBits_t result = xEventGroupWaitBits(wifi_events, ESP32_GOT_IP | ESP32_DISCONNECTED, pdTRUE, pdFALSE, pdMS_TO_TICKS(timeout));
 
     esp_err_t function_status = ESP_FAIL; // Initialize the variable to return the function status of the WIFI is connected or not.
 
     /*
      * If the WIFI is connected successfully to the station network change the function_status to the successful.
      */
-    if (result == CONNECTED_GOT_IP)
+    if (result == ESP32_GOT_IP)
     {
         function_status = ESP_OK;
     }
