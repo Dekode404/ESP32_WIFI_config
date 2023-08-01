@@ -11,6 +11,8 @@ void app_main(void)
 {
     ESP_ERROR_CHECK(nvs_flash_init()); // Initialize the NVS flash used for the WIFI functionality.
 
+    Initialize_GPIO_for_on_demand_portal();
+
     wifi_init(); // Initialize the WIFI.
 
     WIFI_CREDENTIALS_t wifi_credentials_read_from_NVS; // Creat the variable for the wifi credentials

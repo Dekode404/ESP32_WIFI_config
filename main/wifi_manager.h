@@ -6,6 +6,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/queue.h"
 #include "freertos/event_groups.h"
 
 #include "esp_http_server.h"
@@ -18,7 +19,7 @@
 
 #include "esp_netif.h"
 
-#define ON_DEMAND_SWITCH_GPIO GPIO_NUM_4 // This pin is used for the trigger the wifi manager portal
+#define ON_DEMAND_SWITCH_GPIO GPIO_NUM_0 // This pin is used for the trigger the wifi manager portal
 
 #define AP_SSID "ESP32"    // Default SSID of the ESP32 while operating into AP mode
 #define AP_PASS "12345678" // Default PASS of the ESP32 while operating into AP mode
@@ -45,6 +46,7 @@ esp_err_t set_wifi_credentials_url(httpd_req_t *req);
 esp_err_t save_wifi_credentials_url(httpd_req_t *req);
 
 esp_err_t Initialize_GPIO_for_on_demand_portal(void);
+void buttonPushedTask(void *params);
 void init_web_server(void);
 
 #endif
