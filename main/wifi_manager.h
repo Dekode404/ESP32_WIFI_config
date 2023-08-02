@@ -39,6 +39,17 @@ typedef struct
 
 } WIFI_CREDENTIALS_t;
 
+/*
+ * This struct is used as the global variable to store all parameter used for the WIFI
+ */
+typedef struct
+{
+    WIFI_CREDENTIALS_t wifi_credentials_s;
+
+    uint8_t WIFI_mode;
+
+} WIFI_MANAGER_t;
+
 esp_err_t save_the_wifi_credentials_into_NVS(WIFI_CREDENTIALS_t *wifi_credentials);
 esp_err_t read_the_wifi_credentials_from_NVS(WIFI_CREDENTIALS_t *wifi_credentials);
 
