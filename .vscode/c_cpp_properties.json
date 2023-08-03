@@ -9,8 +9,7 @@
                 "${config:idf.espIdfPath}/components/**",
                 "${config:idf.espIdfPathWin}/components/**",
                 "${config:idf.espAdfPath}/components/**",
-                "${config:idf.espAdfPathWin}/components/**",
-                "${workspaceFolder}/components/wifi"
+                "${config:idf.espAdfPathWin}/components/**"
             ],
             "browse": {
                 "path": [
@@ -23,6 +22,7 @@
                 "limitSymbolsToIncludedHeaders": false
             },
             "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            
             "configurationProvider": "ms-vscode.makefile-tools",
             "intelliSenseMode": "gcc-x64"
         }
