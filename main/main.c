@@ -15,6 +15,8 @@ void app_main(void)
 
     wifi_init(); // Initialize the WIFI.
 
+    check_for_on_demand_condition(); // This function is used for the creat the on demand portal for the ESP32
+
     WIFI_CREDENTIALS_t wifi_credentials_read_from_NVS; // Creat the variable for the wifi credentials
 
     // Read the credentials of the WIFI from the NVS flash

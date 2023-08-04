@@ -169,6 +169,15 @@ void buttonPushedTask(void *params)
 }
 
 /*
+ * This function is for the checking the on demand wifi switch.
+ * If the switch is press then this will initiate the server to set the wifi parameters.
+ */
+esp_err_t check_for_on_demand_condition(void)
+{
+    ESP_ERROR_CHECK(Initialize_GPIO_for_on_demand_portal()); // Initialize the GPIO pin which is used as the on demand pin.
+}
+
+/*
  * Function for starting the web server. URI handlers can be registered in real time as long as the
  * server handle is valid.
  */
