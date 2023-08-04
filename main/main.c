@@ -11,8 +11,6 @@ void app_main(void)
 {
     ESP_ERROR_CHECK(nvs_flash_init()); // Initialize the NVS flash used for the WIFI functionality.
 
-    Initialize_GPIO_for_on_demand_portal();
-
     wifi_init(); // Initialize the WIFI.
 
     check_for_on_demand_condition(); // This function is used for the creat the on demand portal for the ESP32

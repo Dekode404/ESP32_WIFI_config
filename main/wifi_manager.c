@@ -1,13 +1,5 @@
 #include "wifi_manager.h"
 
-QueueHandle_t interruptQueue; // Creat the global handler for the WIFI on demand switch.
-
-static void IRAM_ATTR gpio_isr_handler(void *args)
-{
-    int pinNumber = (int)args;
-    xQueueSendFromISR(interruptQueue, &pinNumber, NULL);
-}
-
 /*
  * This fuction is for the save the wifi credentials into the NVS
  */
@@ -129,43 +121,15 @@ esp_err_t save_wifi_credentials_url(httpd_req_t *req)
 esp_err_t Initialize_GPIO_for_on_demand_portal(void)
 {
     /* Initialize GPIO configuration variable for the on demand WIFI switch */
-    gpio_set_direction(ON_DEMAND_SWITCH_GPIO, GPIO_MODE_INPUT);
-    gpio_pulldown_en(ON_DEMAND_SWITCH_GPIO);
-    gpio_pullup_dis(ON_DEMAND_SWITCH_GPIO);
-    gpio_set_intr_type(ON_DEMAND_SWITCH_GPIO, GPIO_INTR_POSEDGE);
 
-    interruptQueue = xQueueCreate(10, sizeof(int));
-    xTaskCreate(buttonPushedTask, "buttonPushedTask", 2048, NULL, 1, NULL);
+    gpio_config_t on_demand_switch_configuration;
+    on_demand_switch_configuration.mode = GPIO_MODE_INPUT;
+    on_demand_switch_configuration.pull_down_en = false;
+    on_demand_switch_configuration.pull_up_en = true;
+    on_demand_switch_configuration.intr_type = GPIO_INTR_DISABLE;
+    on_demand_switch_configuration.pin_bit_mask = (1ULL << ON_DEMAND_SWITCH_GPIO);
 
-    gpio_install_isr_service(0);
-    gpio_isr_handler_add(ON_DEMAND_SWITCH_GPIO, gpio_isr_handler, (void *)ON_DEMAND_SWITCH_GPIO);
-
-    return ESP_OK;
-}
-
-void buttonPushedTask(void *params)
-{
-    int pinNumber, count = 0;
-    while (true)
-    {
-        if (xQueueReceive(interruptQueue, &pinNumber, portMAX_DELAY))
-        {
-            // disable the interrupt
-            gpio_isr_handler_remove(pinNumber);
-
-            // wait some time while we check for the button to be released
-            do
-            {
-                vTaskDelay(1000 / portTICK_PERIOD_MS);
-            } while (gpio_get_level(pinNumber) == 1);
-
-            // do some work
-            printf("GPIO %d was pressed %d times. The state is %d\n", pinNumber, count++, gpio_get_level(ON_DEMAND_SWITCH_GPIO));
-
-            // re-enable the interrupt
-            gpio_isr_handler_add(pinNumber, gpio_isr_handler, (void *)pinNumber);
-        }
-    }
+    return gpio_config(&on_demand_switch_configuration);
 }
 
 /*
@@ -175,6 +139,8 @@ void buttonPushedTask(void *params)
 esp_err_t check_for_on_demand_condition(void)
 {
     ESP_ERROR_CHECK(Initialize_GPIO_for_on_demand_portal()); // Initialize the GPIO pin which is used as the on demand pin.
+
+    return ESP_OK;
 }
 
 /*
