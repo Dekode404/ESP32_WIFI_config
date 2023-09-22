@@ -56,6 +56,7 @@ esp_err_t read_the_wifi_credentials_from_NVS(WIFI_CREDENTIALS_t *wifi_credential
 esp_err_t set_wifi_credentials_url(httpd_req_t *req);
 esp_err_t save_wifi_credentials_url(httpd_req_t *req);
 
+esp_err_t check_for_on_demand_condition(void);
 esp_err_t Initialize_GPIO_for_on_demand_portal(void);
 void buttonPushedTask(void *params);
 void init_web_server(void);
