@@ -43,10 +43,10 @@
 
 #include "esp_netif.h"
 
-#define ON_DEMAND_SWITCH_GPIO GPIO_NUM_0 // This pin is used for the trigger the wifi manager portal
+#define ON_DEMAND_SWITCH_GPIO GPIO_NUM_23 // This pin is used for the trigger the wifi manager portal
 
-#define AP_SSID "ESP32"    // Default SSID of the ESP32 while operating into AP mode
-#define AP_PASS "12345678" // Default PASS of the ESP32 while operating into AP mode
+#define AP_ssid "ESP32_SETUP"   // This SSID used for the setup the AP
+#define AP_password "123456789" // This Password used for the setup the AP
 
 #define STATIC_HOME_PAGE "<!DOCTYPE html><html><body><h2>Set WiFi Credentials</h2><form action='/save_credentials'> <label for='ssid'>SSID:</label><br> <input type='text' id='ssid' name='ssid' required><br> <label for='password'>Password:</label><br> <input type='password' id='password' name='password' required><br><br> <input type='submit' value='Submit'> </form>  </body> </html>"
 #define STATIC_SAVE_PAGE "<!DOCTYPE html><html><body><h2>WiFi Credentials saved</h2> </body> </html>"

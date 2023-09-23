@@ -32,9 +32,6 @@
 /* Uncomment the below line to debug the wifi manager functionality*/
 // #define DEBUG_CODE
 
-#define AP_ssid "ESP32_SETUP"   // This SSID used for the setup the AP
-#define AP_password "123456789" // This Password used for the setup the AP
-
 void app_main(void)
 {
     ESP_ERROR_CHECK(nvs_flash_init()); // Initialize the NVS flash used for the WIFI functionality.
@@ -46,7 +43,8 @@ void app_main(void)
     WIFI_CREDENTIALS_t wifi_credentials_read_from_NVS; // Creat the variable for the wifi credentials
 
     // Read the credentials of the WIFI from the NVS flash
-    if (read_the_wifi_credentials_from_NVS(&wifi_credentials_read_from_NVS) != ESP_OK)
+    if (read_the_wifi_credentials_from_NVS(&wifi_credentials_read_from_NVS) != ESP_OK ||
+        gpio_get_level(ON_DEMAND_SWITCH_GPIO) == 0)
     {
         /*
          * When the no credentials found in the NVS turn on the WIFI in access point mode so that
