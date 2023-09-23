@@ -68,6 +68,7 @@
     "precip",
     "PWRCAP",
     "rapidapi",
+    "rodata",
     "sendstr",
     "staconnected",
     "STADISCONNECTED",

@@ -1,3 +1,20 @@
+/*H**********************************************************************
+ * FILENAME :        wifi_manager.c             DESIGN REF: NA
+ *
+ * DESCRIPTION :
+ *        This code provides a foundation for a WiFi credential management system with a web-based configuration interface and support for on-demand configuration
+ *        initiation via a physical switch or trigger. Users can access the web interface to input and save WiFi credentials, and the system ensures that these
+ *        credentials persist across device restarts.
+ *
+ *
+ *       Copyright A.N.Other Co. 1990, 1995.  All rights reserved.
+ *
+ * AUTHOR :    Saurabh kadam.       START DATE :    21 Jun 2023
+ *
+ * CHANGES : 23 Sep 2023
+ *
+ *H*/
+
 #include "wifi_manager.h"
 
 /*
