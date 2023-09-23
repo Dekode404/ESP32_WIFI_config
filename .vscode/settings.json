@@ -43,7 +43,8 @@
     "string": "c",
     "string_view": "c",
     "esp_http_server.h": "c",
-    "wifi_manager.h": "c"
+    "wifi_manager.h": "c",
+    "esp_netif.h": "c"
   },
   "cSpell.words": [
     "ALLON",
