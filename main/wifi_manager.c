@@ -1,5 +1,5 @@
 /*H**********************************************************************
- * FILENAME :        wifi_manager.c             DESIGN REF: NA
+ * FILENAME :        wifi_manager.h             DESIGN REF: NA
  *
  * DESCRIPTION :
  *        This code provides a foundation for a WiFi credential management system with a web-based configuration interface and support for on-demand configuration
