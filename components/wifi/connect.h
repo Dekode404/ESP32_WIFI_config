@@ -1,4 +1,4 @@
-/*H**********************************************************************
+/**
  * @file connect.h
  * @brief ESP32 Wi-Fi Management Header
  *
@@ -11,8 +11,9 @@
  *
  * @author Saurabh kadam
  * @date 21 Jun 2023
+ * @version 1.0
  *
- *H*/
+ */
 
 #ifndef connect_h
 #define connect_h

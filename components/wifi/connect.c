@@ -1,6 +1,6 @@
-/*H**********************************************************************
+/**
  * @file connect.c
- * @brief ESP32 Wi-Fi Management Header
+ * @brief ESP32 Wi-Fi Management source
  *
  * This source file provides declarations for managing Wi-Fi connections on an ESP32 device.
  * It includes functions for connecting to Wi-Fi networks in both station (client) and access point (AP) modes,
@@ -11,8 +11,9 @@
  *
  * @author Saurabh kadam
  * @date 21 Jun 2023
+ * @version 1.0
  *
- *H*/
+ */
 
 #include "connect.h"
 

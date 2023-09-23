@@ -1,15 +1,18 @@
-/*H**********************************************************************
- * FILENAME :        wifi_manager.h             DESIGN REF: NA
+/**
+ * @file wifi_manager.h
  *
- * DESCRIPTION :
- *         this header file sets the foundation for a WiFi manager application on the ESP32, providing functions for storing, retrieving, and serving WiFi
- *         credentials through a web-based interface. It also includes support for triggering WiFi configuration using a physical switch or trigger.
+ * @brief WiFi Credential Management System header
  *
- * AUTHOR :    Saurabh kadam.       START DATE :    21 Jun 2023
+ * This header file defines functions and data structures for managing WiFi credentials on an ESP32 device.
+ * The system provides a web-based configuration interface, supports on-demand configuration initiation via a physical switch,
+ * and ensures that WiFi credentials persist across device restarts.
  *
- * CHANGES : 23 Sep 2023
+ * @author Saurabh Kadam
+ * @date 21 Jun 2023
+ * @version 1.0
  *
- *H*/
+ *
+ */
 
 #ifndef wifi_manager_h
 #define wifi_manager_h

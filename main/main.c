@@ -23,6 +23,7 @@
  *
  * @author Saurabh kadam
  * @date 21 Jun 2023
+ * @version 1.0
  *
  */
 #include "connect.h"      // This is manually added file for the wifi related functionality

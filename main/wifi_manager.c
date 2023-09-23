@@ -1,19 +1,27 @@
-/*H**********************************************************************
- * FILENAME :        wifi_manager.h             DESIGN REF: NA
+/**
+ * @file wifi_manager.c
  *
- * DESCRIPTION :
- *        This code provides a foundation for a WiFi credential management system with a web-based configuration interface and support for on-demand configuration
- *        initiation via a physical switch or trigger. Users can access the web interface to input and save WiFi credentials, and the system ensures that these
- *        credentials persist across device restarts.
+ * @brief WiFi Credential Management System source
  *
+ * This file defines functions and data structures for managing WiFi credentials on an ESP32 device.
+ * The system provides a web-based configuration interface, supports on-demand configuration initiation via a physical switch,
+ * and ensures that WiFi credentials persist across device restarts.
  *
- *       Copyright A.N.Other Co. 1990, 1995.  All rights reserved.
+ * @note Before using this module, ensure that you have included the required header files and initialized necessary components,
+ *       such as ESP32 NVS (Non-Volatile Storage) and WiFi, in your main application code.
  *
- * AUTHOR :    Saurabh kadam.       START DATE :    21 Jun 2023
+ * @note This header also includes references to ESP32-specific components, such as NVS and HTTP server functions.
  *
- * CHANGES : 23 Sep 2023
+ * @warning This header assumes that certain functions, like NVS initialization and HTTP server setup, are defined elsewhere in the code.
+ *          Make sure to include the required components and functions in your application for complete functionality.
  *
- *H*/
+ * @author Saurabh Kadam
+ * @date 21 Jun 2023
+ * @version 1.0
+ *
+ * @see "connect.h" for WiFi management functions and definitions.
+ *
+ */
 
 #include "wifi_manager.h"
 
