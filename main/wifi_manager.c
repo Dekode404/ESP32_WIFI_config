@@ -1,7 +1,27 @@
+/*H**********************************************************************
+ * FILENAME :        wifi_manager.c             DESIGN REF: NA
+ *
+ * DESCRIPTION :
+ *        This code provides a foundation for a WiFi credential management system with a web-based configuration interface and support for on-demand configuration
+ *        initiation via a physical switch or trigger. Users can access the web interface to input and save WiFi credentials, and the system ensures that these
+ *        credentials persist across device restarts.
+ *
+ *
+ *       Copyright A.N.Other Co. 1990, 1995.  All rights reserved.
+ *
+ * AUTHOR :    Saurabh kadam.       START DATE :    21 Jun 2023
+ *
+ * CHANGES : 23 Sep 2023
+ *
+ *H*/
+
 #include "wifi_manager.h"
 
 /*
- * This fuction is for the save the wifi credentials into the NVS
+ * This function effectively stores the WiFi credentials in the NVS storage under the "my_credentials" namespace with the key "Credentials."
+ * Storing these credentials in NVS allows for persistence, so they can be retrieved and used even after a power cycle or reboot of the ESP32 device.
+ * It's important to note that error checking is done at various stages to ensure that the operations complete successfully and handle any potential
+ * errors that may occur during NVS operations.
  */
 esp_err_t save_the_wifi_credentials_into_NVS(WIFI_CREDENTIALS_t *wifi_credentials)
 {
@@ -23,7 +43,9 @@ esp_err_t save_the_wifi_credentials_into_NVS(WIFI_CREDENTIALS_t *wifi_credential
 }
 
 /*
- * This fuction is for the read the wifi credentials from the NVS
+ * This function effectively reads WiFi credentials from the NVS storage and populates the wifi_credentials structure with the retrieved data.
+ * It also includes error checking and debug logging to provide feedback on the status of the NVS retrieval operation.
+ * If the credentials have been previously stored in NVS, they will be loaded into wifi_credentials. If not found, an appropriate error message will be logged.
  */
 esp_err_t read_the_wifi_credentials_from_NVS(WIFI_CREDENTIALS_t *wifi_credentials)
 {
@@ -62,7 +84,9 @@ esp_err_t read_the_wifi_credentials_from_NVS(WIFI_CREDENTIALS_t *wifi_credential
 }
 
 /*
- * This fuction is handler function for the home page URL
+ * This function is designed to handle requests for the home page of a web interface used for configuring WiFi credentials.
+ * When a user accesses the home page URL, the server responds with the HTML content provided in STATIC_HOME_PAGE.
+ * This HTML page likely contains a form where users can input their WiFi SSID and password for configuration.
  */
 esp_err_t set_wifi_credentials_url(httpd_req_t *req)
 {
@@ -75,7 +99,8 @@ esp_err_t set_wifi_credentials_url(httpd_req_t *req)
 }
 
 /*
- * This fuction is handler function for the WIFI credentials save
+ * Function appears to be an HTTP request handler for saving WiFi credentials received from a web page.
+ * It processes a URL query string, extracts the SSID and password, and then saves them into non-volatile storage (NVS)
  */
 esp_err_t save_wifi_credentials_url(httpd_req_t *req)
 {
@@ -116,7 +141,8 @@ esp_err_t save_wifi_credentials_url(httpd_req_t *req)
 }
 
 /*
- * This function is used for the Initialize the ondemand switch GPIO pin.
+ * This function initializes a GPIO pin as an input with a pull-up resistor enabled and pull-down resistor disabled.
+ * The pin's state will be checked periodically to detect changes, and no interrupts will be generated when the state changes.
  */
 esp_err_t Initialize_GPIO_for_on_demand_portal(void)
 {
@@ -133,8 +159,8 @@ esp_err_t Initialize_GPIO_for_on_demand_portal(void)
 }
 
 /*
- * This function is for the checking the on demand wifi switch.
- * If the switch is press then this will initiate the server to set the wifi parameters.
+ * After this initialization, the system wait for some external trigger (physical switch press) to initiate the WiFi configuration process.
+ * This function does the setup part, and the actual handling of the on-demand condition, possibly in an interrupt service routine or a task that monitors the GPIO pin's state.
  */
 esp_err_t check_for_on_demand_condition(void)
 {
@@ -144,8 +170,9 @@ esp_err_t check_for_on_demand_condition(void)
 }
 
 /*
- * Function for starting the web server. URI handlers can be registered in real time as long as the
- * server handle is valid.
+ * Function is responsible for initializing and starting a web server on an ESP32. It sets up the server configuration, registers URI handlers for specific URLs, and then starts the server.
+ * This function sets up a basic web server on the ESP32 with two URL handlers—one for serving a home page and another for saving WiFi credentials.
+ * It then starts the server, and the server will continue running as long as the program is executing.
  */
 void init_web_server(void)
 {

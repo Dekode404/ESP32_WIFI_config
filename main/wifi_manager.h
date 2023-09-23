@@ -1,9 +1,30 @@
+/*H**********************************************************************
+ * FILENAME :        wifi_manager.h             DESIGN REF: NA
+ *
+ * DESCRIPTION :
+ *         this header file sets the foundation for a WiFi manager application on the ESP32, providing functions for storing, retrieving, and serving WiFi
+ *         credentials through a web-based interface. It also includes support for triggering WiFi configuration using a physical switch or trigger.
+ *
+ * AUTHOR :    Saurabh kadam.       START DATE :    21 Jun 2023
+ *
+ * CHANGES : 23 Sep 2023
+ *
+ *H*/
+
 #ifndef wifi_manager_h
 #define wifi_manager_h
 
+/* Standard C Library Includes
+ * This header file includes standard C libraries such as <stdio.h> and <string.h> for
+ * general input/output and string manipulation functions.
+ */
 #include <stdio.h>
 #include <string.h>
 
+/* The code includes various FreeRTOS and ESP-IDF libraries.
+ * These libraries are used for tasks, queues, event groups, HTTP server functionality, non-volatile storage,
+ * GPIO control, and error handling in the ESP-IDF environment.
+ */
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -50,15 +71,25 @@ typedef struct
 
 } WIFI_MANAGER_t;
 
+/* This fuction is for the save the wifi credentials into the NVS */
 esp_err_t save_the_wifi_credentials_into_NVS(WIFI_CREDENTIALS_t *wifi_credentials);
+
+/* This fuction is for the read the wifi credentials from the NVS */
 esp_err_t read_the_wifi_credentials_from_NVS(WIFI_CREDENTIALS_t *wifi_credentials);
 
+/* This fuction is handler function for the home page URL */
 esp_err_t set_wifi_credentials_url(httpd_req_t *req);
+
+/* This fuction is handler function for the WIFI credentials save */
 esp_err_t save_wifi_credentials_url(httpd_req_t *req);
 
+/* This function is for the checking the on demand wifi switch. */
 esp_err_t check_for_on_demand_condition(void);
+
+/* This function is used for the Initialize the ondemand switch GPIO pin. */
 esp_err_t Initialize_GPIO_for_on_demand_portal(void);
-void buttonPushedTask(void *params);
+
+/* Function is responsible for initializing and starting a web server on an ESP32*/
 void init_web_server(void);
 
 #endif
