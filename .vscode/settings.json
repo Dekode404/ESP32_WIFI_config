@@ -68,6 +68,7 @@
     "precip",
     "PWRCAP",
     "rapidapi",
+    "sendstr",
     "staconnected",
     "STADISCONNECTED",
     "SUPCHAN",
