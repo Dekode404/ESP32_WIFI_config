@@ -1,3 +1,30 @@
+/**
+ * @file main.c
+ *
+ * @brief Wi-Fi Manager for ESP32
+ *
+ * This application code manages Wi-Fi connections on an ESP32 device. It provides the following functionality:
+ * - Initializes the ESP32's non-volatile storage (NVS) for storing Wi-Fi credentials.
+ * - Handles an on-demand portal for configuring Wi-Fi credentials.
+ * - Reads stored Wi-Fi credentials from NVS or sets up an access point (AP) and a local web server for configuring credentials if none are found.
+ * - Attempts to connect to a Wi-Fi network using the stored credentials (station mode).
+ * - Optionally, prints debug information about the stored SSID and password.
+ *
+ * @note Before using this code, ensure that you have included the required header files for Wi-Fi management (connect.h)
+ *       and the Wi-Fi manager's functionality (wifi_manager.h).
+ *
+ * @note To enable debug mode, uncomment the line "#define DEBUG_CODE."
+ *
+ * @warning This code snippet assumes that some functions (e.g., check_for_on_demand_condition(), wifi_init(),
+ *          and read_the_wifi_credentials_from_NVS()) are defined elsewhere and may not provide complete functionality.
+ *
+ * @see "connect.h" for Wi-Fi management functions and definitions.
+ * @see "wifi_manager.h" for the Wi-Fi manager's functions and structures.
+ *
+ * @author Saurabh kadam
+ * @date 21 Jun 2023
+ *
+ */
 #include "connect.h"      // This is manually added file for the wifi related functionality
 #include "wifi_manager.h" // This is manullay added file for the WIFI manager functionality
 
